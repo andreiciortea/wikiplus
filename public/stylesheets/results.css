@@ -15,6 +15,13 @@ body {
 
 .wiki-container {
     background-color: #ffffff;
+    overflow: auto;
+    overflow-x: hidden;
+    height: 90%;
+}
+
+.widget-container {
+
 }
 
 /* Carousel */
@@ -22,10 +29,8 @@ body {
 .slide {
   background-size: cover;
   display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
- 
+  position: fixed;
+  margin-top: 5%;
 }
 
 .active-slide {
@@ -38,9 +43,10 @@ body {
 }
 
 .slider-nav {
-  position: relative;
-  margin-left: auto;
+  position: fixed;
+  margin-left: 5%;
   margin-right: auto;
+  z-index: 10;
 }
 
 .arrow-prev {
@@ -76,17 +82,38 @@ body {
   color: #363636;
 }
 
+.wikipedia #content {
+    margin-left: 0;
+}
+
+div.slide .container {
+    width: auto;
+    margin-top: 10%;
+}
+
+/* Weather */
+
+#LocalWeather {
+    color:#5a5a5a;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-transform: uppercase;
+}
+
 /* Clock */
 
 .outer_face {
     position: relative;
-    right: 0;
     width: 250px;
     height: 250px;
     border-radius: 250px;
     background: white;
     box-shadow: inset 0 0 10px gray;
-    border: 14px solid black
+    border: 14px solid black;
     }
 
 .outer_face::before, .outer_face::after, .outer_face .marker {

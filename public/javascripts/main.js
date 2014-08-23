@@ -3,16 +3,16 @@ var buildContainer = function() {
 	var container = $('.result-container');
 	$('<div>').addClass('header').appendTo(container);
 	$('<h1>').text('WikiPlus').appendTo($('.header'));
-	$('<div>').addClass('wiki-container').addClass('col-md-8').appendTo(container);
-	$('<div>').addClass('widget-container').addClass('col-md-4').appendTo(container);
-	$('<div>').addClass('slider').appendTo($('.widget-container'));
+	$('<div>').addClass('wiki-container').addClass('col-md-9').appendTo(container);
+	$('<div>').addClass('widget-container').addClass('col-md-3').appendTo(container);
 	$('<div>').addClass('slider-nav').appendTo($('.widget-container'));
 	$('<a href="#">').addClass("arrow-prev").appendTo($('.slider-nav'));
 	$('<img src="http://s3.amazonaws.com/codecademy-content/courses/ltp2/img/flipboard/arrow-prev.png">').appendTo($('.arrow-prev'));
 	$('<ul>').addClass('slider-dots').appendTo($('.slider-nav'));
 	$('<a>').addClass("arrow-next").appendTo($('.slider-nav'));
 	$('<img src="http://s3.amazonaws.com/codecademy-content/courses/ltp2/img/flipboard/arrow-next.png">').appendTo($('.arrow-next'));
-	
+	$('<div>').addClass('slider').appendTo($('.widget-container'));
+
 	$('.arrow-next').click(function(){
         var currentSlide, nextSlide;
         currentSlide = $('.active-slide');
@@ -72,13 +72,22 @@ var addWidgets = function() {
 		for (var i = 1; i < bulletNumber; i++) {
 			$('<li>').addClass('dot').html('&bull;').appendTo(sliderDots);
 		}
-		$('<div class="slide active-slide">').appendTo($('.slider'));
+
+		for (var i = 0; i < bulletNumber; i++) {
+			var currentValue = jsonData[i].name;
+			$('<div class="slide">').addClass(currentValue).appendTo($('.slider'));
+			$('<div>').addClass('container').prop('id', currentValue).appendTo('.'+currentValue);
+		}
+
+		$('.' + jsonData[0].name).addClass('active-slide');
 	}
+
 	
 	$('<div class="item test">').appendTo($('.carousel-inner'));
-	$('.active-slide').addClass('clock');
-	$('<div class="container" id="clock">').appendTo($('.clock'));
+	
+	
 	buildClockWidget();
+	buildWeatherWidget();
 	
 };
 
