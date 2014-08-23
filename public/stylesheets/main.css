@@ -8,7 +8,11 @@
     padding-right: 10px;
     text-transform: uppercase;
 }
-.description {
+body {
     height: 500px;
-    background-image: url('https://www.dropbox.com/s/o0nere9d2ei3kod/DSC_0343.JPG?dl=0');
+    background-image: url('/assets/images/bkg.JPG');
+}
+.description {
+}
+.search {
 }
