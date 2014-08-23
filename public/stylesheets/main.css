@@ -24,6 +24,14 @@ body {
     right: 0;
 
     margin: auto;
+
 }
 .search {
+    width: 100%;
+    position: absolute;
+    bottom: 5%;
+    
+}
+.search input {
+    width: 80%;
 }
