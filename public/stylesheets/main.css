@@ -1,0 +1,14 @@
+.header h1 {
+    color:#5a5a5a;
+    font-size: 11px;
+    font-weight: bold;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-transform: uppercase;
+}
+.description {
+    height: 500px;
+    background-image: url('https://www.dropbox.com/s/o0nere9d2ei3kod/DSC_0343.JPG?dl=0');
+}
