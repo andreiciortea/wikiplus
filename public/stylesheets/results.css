@@ -12,17 +12,75 @@ body {
     padding-right: 10px;
     text-transform: uppercase;
 }
-.result-container {
-    width: auto;
-    height: auto;
+
+.wiki-container {
+    background-color: #ffffff;
 }
-.carousel-slide {
-    width: 80%;
-    height: 80%;
+
+/* Carousel */
+
+.slide {
+  background-size: cover;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+ 
 }
+
+.active-slide {
+    display: block;
+}
+
+.slide-copy {
+    text-align: :center;
+    position: relative;
+}
+
+.slider-nav {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.arrow-prev {
+  margin-right: 45px;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 9px;
+}
+
+.arrow-next {
+  margin-left: 45px;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 9px;
+}
+
+.slider-dots {
+  list-style: none;
+  display: inline-block;
+  padding-left: 0;
+  margin-bottom: 0;
+  bottom: 0;
+}
+
+.slider-dots li {
+  color: #bbbcbc;
+  display: inline;
+  font-size: 30px;
+  margin-right: 5px;
+}
+
+.slider-dots li.active-dot {
+  color: #363636;
+}
+
+/* Clock */
 
 .outer_face {
     position: relative;
+    right: 0;
     width: 250px;
     height: 250px;
     border-radius: 250px;
