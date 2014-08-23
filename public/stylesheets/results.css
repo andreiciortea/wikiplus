@@ -1,0 +1,12 @@
+body {
+	background-color:#adaeb4;
+	
+}
+.result-container {
+    width: auto;
+    height: auto;
+}
+.carousel-slide {
+    width: 80%;
+    height: 80%;
+}
