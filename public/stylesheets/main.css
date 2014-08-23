@@ -1,6 +1,6 @@
 .header h1 {
     color:#5a5a5a;
-    font-size: 11px;
+    font-size: 16px;
     font-weight: bold;
     padding-top: 14px;
     padding-bottom: 14px;
@@ -38,3 +38,4 @@ body {
 .search input {
     width: 80%;
 }
+

@@ -2,6 +2,16 @@ body {
 	background-color:#adaeb4;
 	
 }
+.header h1 {
+    color:#5a5a5a;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-transform: uppercase;
+}
 .result-container {
     width: auto;
     height: auto;

@@ -3,27 +3,30 @@ var buildContainer = function() {
 	var container = $('.result-container');
 	$('<div class="header">').appendTo(container);
 	$('<h1>').text('WikiPlus').appendTo($('.header'));
-	$('<div class="carousel-slide">').appendTo(container);
-	$('<div class="carousel-inner">').appendTo($('.carousel-slide'));
+	$('<div class="slider">').appendTo(container);
+	$('<div class="slide active-slide">').appendTo($('.slider'));
+	$('<div>').addClass('slider-nav').appendTo(container);
+	
 };
 
 var addMainWidget = function() {
-	$('<div class="item active wikipedia">').appendTo($('.carousel-inner'));
-	$('.wikipedia').append($('.mw-body'));
+	$('<div class="wikipedia">').appendTo($('.active-slide'));
+	$('<div class="container">').appendTo($('.wikipedia'));
+	$('<div class="row">').appendTo($('.container'));
+	$('<div class="slide-copy col-xs-5">').appendTo($('.row'));
+	$('.slide-copy').append($('.mw-body'));
 };
 
 var addWidgets = function() {
 	$('<div class="item test">').appendTo($('.carousel-inner'));
+	$('<div class="slide clock">').appendTo($('.slider'));
+	$('<div class="container" id="clock">').appendTo($('.clock'));
+	buildClockWidget();
 	
 };
 
-$(document).ready(function(){
-	buildContainer();
-	addMainWidget();
-});
-
 function buildClockWidget(){
-	var parent = $('#PARENT_ELEMENT_ID');
+	var parent = $('#clock');
 	var container = $('<div>').addClass('outer_face').prop('id', 'liveclock').appendTo(parent);
 	$('<div>').addClass('marker oneseven').appendTo(container);
 	$('<div>').addClass('marker twoeight').appendTo(container);
@@ -35,3 +38,11 @@ function buildClockWidget(){
 	$('<div>').addClass('hand minute').appendTo(innerContainer);
 	$('<div>').addClass('hand second').appendTo(innerContainer);
 }
+
+$(document).ready(function(){
+	buildContainer();
+	addMainWidget();
+	addWidgets();
+});
+
+
