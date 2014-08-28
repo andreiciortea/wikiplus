@@ -52,13 +52,22 @@ public class Application extends Controller {
     }
 
     public static List<Widget> getApplicableWidgets(List<String> types) {
-    	List<Widget> l = new ArrayList<Widget>();
-    	l.add(new LocalTimeWidget("Lyon"));
-        return l;
+        // TODO: add the actual implementation
+    	List<Widget> list = new ArrayList<Widget>();
+    	list.add(new LocalTimeWidget("Lyon"));
+    	
+        return list;
     }
     
-    public static String getJsonData(List<Widget> widgets) {
-        return "";
+    public static Promise<String> getJsonData(List<Widget> widgets) {
+        // TODO: add the actual implementation
+        return widgets.get(0).getJsonData().map(
+                        new Function<String, String>() {
+                            public String apply(String jsonObj) {
+                                return "[" + jsonObj + "]";
+                            }
+                        }
+                    );
     }
     
     public static Promise<String> getWidgetsData(String path) {
@@ -72,9 +81,9 @@ public class Application extends Controller {
                                                 }
                                             );
         
-        Promise<String> jsonData = widgets.map(
-                new Function<List<Widget>, String>() {
-                    public String apply(List<Widget> widgets) {
+        Promise<String> jsonData = widgets.flatMap(
+                new Function<List<Widget>, Promise<String>>() {
+                    public Promise<String> apply(List<Widget> widgets) {
                         return getJsonData(widgets);
                     }
                 }
@@ -83,21 +92,37 @@ public class Application extends Controller {
         return jsonData;
     }
     
-    public static Promise<Result> index(String path) {
-        
-//        testJson();
-        
-        Promise<String> jsonData = getWidgetsData(path);
-        
-        Promise<Result> wikiPage = WS.url("http://en.wikipedia.org/wiki/" + path).get().map(
-                new Function<WSResponse, Result>() {
-                    public Result apply(WSResponse response) {
-                        return ok(response.getBody()).as("text/html");
+    public static Promise<String> wrapJsonData(Promise<String> jsonData) {
+        return jsonData.map(
+                new Function<String, String>() {
+                    public String apply(String jsonData) {
+                        return "<script id=\"widgets\" type=\"application/json\">"
+                                + jsonData
+                                + "</script>";
                     }
                 }
             );
+    }
+    
+    public static Result index(String path) {
+
+        Promise<String> jsonData = getWidgetsData(path);
+        Promise<String> script = wrapJsonData(jsonData);
         
-        return wikiPage; 
+        String jsScript = script.get(5000);
+        
+        Promise<String> wikiPage = WS.url("http://en.wikipedia.org/wiki/" + path).get().map(
+                new Function<WSResponse, String>() {
+                    public String apply(WSResponse response) {
+//                        return ok(response.getBody()).as("text/html");
+                        return response.getBody();
+                    }
+                }
+            );
+
+        String page = wikiPage.get(5000).replace("</body>", jsScript + "</body>");
+        
+        return ok(page).as("text/html");
     }
 
 }
