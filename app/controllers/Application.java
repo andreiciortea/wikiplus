@@ -1,8 +1,12 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import models.LocalTimeWidget;
+import models.Widget;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -19,7 +23,8 @@ import views.html.*;
 
 public class Application extends Controller {
 
-    Map<String, String> widgetIndex = new HashMap<String,String>();
+    //Map<String, List<String>> widgetIndex = new HashMap<String, List<String>>();
+    //widgetIndex.add('LocalTimeWidget', Arrays.asList("PopulatedPlace", "sup2", "sup3"));
     
     private static List<String> extractTypesJson(String jsonStr) {
         JsonNode results = Json.parse(jsonStr);
@@ -46,29 +51,31 @@ public class Application extends Controller {
             );
     }
 
-    public static List<String> getApplicableWidgets(List<String> types) {
-        return null;
+    public static List<Widget> getApplicableWidgets(List<String> types) {
+    	List<Widget> l = new ArrayList<Widget>();
+    	l.add(new LocalTimeWidget("Lyon"));
+        return l;
     }
     
-    public static String getJsonData(List<String> widgetIds) {
+    public static String getJsonData(List<Widget> widgets) {
         return "";
     }
     
     public static Promise<String> getWidgetsData(String path) {
 //        List<String> types = extractTypes(path).get(5000);
         
-        Promise<List<String>> widgetIds = extractTypes(path).map(
-                                                new Function<List<String>, List<String>>() {
-                                                    public List<String> apply(List<String> types) {
+        Promise<List<Widget>> widgets = extractTypes(path).map(
+                                                new Function<List<String>, List<Widget>>() {
+                                                    public List<Widget> apply(List<String> types) {
                                                         return getApplicableWidgets(types);
                                                     }
                                                 }
                                             );
         
-        Promise<String> jsonData = widgetIds.map(
-                new Function<List<String>, String>() {
-                    public String apply(List<String> widgetIds) {
-                        return getJsonData(widgetIds);
+        Promise<String> jsonData = widgets.map(
+                new Function<List<Widget>, String>() {
+                    public String apply(List<Widget> widgets) {
+                        return getJsonData(widgets);
                     }
                 }
             );
