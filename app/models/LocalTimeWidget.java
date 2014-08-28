@@ -18,8 +18,33 @@ public class LocalTimeWidget extends Widget {
 	public LocalTimeWidget(String path){
 		this.path = path;
 	}
-
-	private Promise<JsonNode> getTimeZone(Promise<String> jsonData) {
+	
+	public Promise<String> getDBpediaCoordinates() {
+        // Build DBpedia query.
+        String resourceUri = "<http://dbpedia.org/resource/" + path + ">";
+        String query = "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>"
+                    + "SELECT ?lat ?long WHERE {"
+                    + resourceUri + " geo:lat ?lat ."
+                    + resourceUri + " geo:long ?long ."
+                    + "}";
+        
+        WSRequestHolder holder = WS.url("http://dbpedia.org/sparql")
+                .setQueryParameter("format", "json")
+                .setQueryParameter("query", query);
+        
+        // Get response promise.
+        Promise<WSResponse> coordPromise = holder.get();
+        
+        // Propagate JSON response with lat and long.
+        return coordPromise.map(
+                new Function<WSResponse, String>() {
+                    public String apply(WSResponse response) {
+                        return response.getBody();
+                    }
+                });
+    }
+	
+	private Promise<JsonNode> getGeoNamesTimeZone(Promise<String> jsonData) {
 		// use the json response of dbpedia to query geonames for timezone
 	    JsonNode result = Json.parse(jsonData.get(5000));
 	    
@@ -45,10 +70,11 @@ public class LocalTimeWidget extends Widget {
             );
 	}
 	
-	private Promise<String> getTimeZoneId(Promise<String> jsonData){
+	private Promise<String> getGeoNamesTimeZoneId(Promise<String> jsonData){
 		// get the TimeZoneId from the geoname response
-		Promise<JsonNode> tz = getTimeZone(jsonData);
-        return tz.map(
+		Promise<JsonNode> tzPromise = getGeoNamesTimeZone(jsonData);
+		
+        return tzPromise.map(
         		new Function<JsonNode, String>() {
         			public String apply(JsonNode node) {
         				return node.findValue("timezoneId").asText();
@@ -56,10 +82,11 @@ public class LocalTimeWidget extends Widget {
         		});
 	}
 	
-	private Promise<String> getTimeZoneDst(Promise<String> jsonData){
+	private Promise<String> getGeoNamesTimeZoneDst(Promise<String> jsonData){
 		// get the DST value from the geoname response
-		Promise<JsonNode> tz = getTimeZone(jsonData);
-        return tz.map(
+		Promise<JsonNode> tzPromise = getGeoNamesTimeZone(jsonData);
+		
+        return tzPromise.map(
         		new Function<JsonNode, String>() {
         			public String apply(JsonNode node) {
         				return node.findValue("dstOffset").asText();
@@ -67,32 +94,8 @@ public class LocalTimeWidget extends Widget {
         		});
 	}
 	
-	public Promise<String> getCoordinates() {
-		// use the path to query dbpedia for geocoordinates
-	    String resourceUri = "<http://dbpedia.org/resource/" + path + ">";
-        String query = "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>"
-                    + "SELECT ?lat ?long WHERE {"
-                    + resourceUri + " geo:lat ?lat ."
-                    + resourceUri + " geo:long ?long ."
-                    + "}";
-        
-        WSRequestHolder holder = WS.url("http://dbpedia.org/sparql")
-                .setQueryParameter("format", "json")
-                .setQueryParameter("query", query);
-        
-        Promise<WSResponse> dbpediaResponse = holder.get();
-        
-        return dbpediaResponse.map(
-                new Function<WSResponse, String>() {
-                    public String apply(WSResponse response) {
-                        return response.getBody();
-                    }
-                });
-	}
-	
-	
 	public String packJsonData(String timezoneId) {
-		// preparing the content for the HTML browser
+		// preparing the content for injection in the HTML representation
 	    ObjectNode widgetData = Json.newObject();
 	    
 	    widgetData.put("name", "LocalTime");
@@ -109,14 +112,14 @@ public class LocalTimeWidget extends Widget {
 		return "http://dbpedia.org/resource/" + path 
 				+ " dbpedia-owl:daylightSavingTimeZone <http://dbpedia.org/resource/UTC-"
 				+ timezoneDst + "> .";
-	    //some Jena magic would be nicer
 	}
 	
 	@Override
 	public Promise<String> getJsonData() {
-		// this is called from the controller for HTML browsers
-	    Promise<String> coordinatesPromise = getCoordinates();
-	    Promise<String> timezoneIdPromise = getTimeZoneId(coordinatesPromise);
+		// this is called from the controller for HTML representations
+	    // TODO: refactor this
+	    Promise<String> coordinatesPromise = getDBpediaCoordinates();
+	    Promise<String> timezoneIdPromise = getGeoNamesTimeZoneId(coordinatesPromise);
 	    
 	    return timezoneIdPromise.map(
 	            new Function<String, String>() {
@@ -129,9 +132,10 @@ public class LocalTimeWidget extends Widget {
 	
 	@Override
 	public Promise<String> getRdfData() {
-		// this is called from the controller for RDF browsers
-	    Promise<String> coordinatesPromise = getCoordinates();
-	    Promise<String> timezoneDstPromise = getTimeZoneDst(coordinatesPromise);
+		// this is called from the controller for RDF representations
+	    // TODO: refactor this
+	    Promise<String> coordinatesPromise = getDBpediaCoordinates();
+	    Promise<String> timezoneDstPromise = getGeoNamesTimeZoneDst(coordinatesPromise);
 	    
 	    return timezoneDstPromise.map(
 	            new Function<String, String>() {
