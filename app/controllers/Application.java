@@ -97,7 +97,7 @@ public class Application extends Controller {
         return jsonData;
     }
     
-    public static Promise<String> wrapJsonData(Promise<String> jsonData) {
+    public static Promise<String> wrapScript(Promise<String> jsonData) {
         return jsonData.map(
                 new Function<String, String>() {
                     public String apply(String jsonData) {
@@ -150,26 +150,33 @@ public class Application extends Controller {
     public static Result index(String path) {
 
         Promise<String> jsonData = getWidgetsData(path);
-        Promise<String> script = wrapJsonData(jsonData);
-        
-        String jsScript = script.get(5000);
-        
-        Promise<String> wikiPage = WS.url("http://en.wikipedia.org/wiki/" + path).get().map(
-                new Function<WSResponse, String>() {
-                    public String apply(WSResponse response) {
-                        String cleanWikiPage = cleanifyWikiPage(response.getBody());
-                        return cleanWikiPage;
-                    }
-                }
-            );
 
-        String page = wikiPage.get(5000).replace("</body>", jsScript + "</body>");
+//        if (request().accepts("text/html")) {
+            
+            Promise<String> wikiPage = WS.url("http://en.wikipedia.org/wiki/" + path).get().map(
+                    new Function<WSResponse, String>() {
+                        public String apply(WSResponse response) {
+                            String cleanWikiPage = cleanifyWikiPage(response.getBody());
+                            return cleanWikiPage;
+                        }
+                    }
+                );
+            
+            Promise<String> script = wrapScript(jsonData);
+            String jsScript = script.get(5000);
+            
+            String page = wikiPage.get(5000).replace("</body>", jsScript + "</body>");
+            
+            if (page == null) {
+                return internalServerError();
+            }
+            
+            return ok(page).as("text/html");
+//        } else if (request().accepts("text/turtle")) {
+            
+//        }
         
-        if (page == null) {
-            return internalServerError();
-        }
-        
-        return ok(page).as("text/html");
+//        return badRequest();
     }
 
 }
