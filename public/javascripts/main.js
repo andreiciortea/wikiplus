@@ -21,3 +21,17 @@ $(document).ready(function(){
 	buildContainer();
 	addMainWidget();
 });
+
+function buildClockWidget(){
+	var parent = $('#PARENT_ELEMENT_ID');
+	var container = $('<div>').addClass('outer_face').prop('id', 'liveclock').appendTo(parent);
+	$('<div>').addClass('marker oneseven').appendTo(container);
+	$('<div>').addClass('marker twoeight').appendTo(container);
+	$('<div>').addClass('marker fourten').appendTo(container);
+	$('<div>').addClass('marker fiveeleven').appendTo(container);
+	
+	var innerContainer = $('<div>').addClass('inner_face').appendTo(container);
+	$('<div>').addClass('hand hour').appendTo(innerContainer);
+	$('<div>').addClass('hand minute').appendTo(innerContainer);
+	$('<div>').addClass('hand second').appendTo(innerContainer);
+}
