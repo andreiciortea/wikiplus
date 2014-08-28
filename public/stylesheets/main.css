@@ -13,6 +13,17 @@ body {
     background-image: url('/assets/images/bkg.JPG');
 }
 .description {
+	text-align: center;
+	width: 400px;
+    height: 100px;
+
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
 }
 .search {
 }
