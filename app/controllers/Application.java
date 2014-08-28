@@ -156,9 +156,8 @@ public class Application extends Controller {
     
     public static Result index(String path) {
 
-        Promise<String> jsonData = getWidgetsData(path);
-
-//        if (request().accepts("text/html")) {
+        if (request().accepts("text/html")) {
+            Promise<String> jsonData = getWidgetsData(path);
             
             Promise<String> wikiPage = WS.url("http://en.wikipedia.org/wiki/" + path).get().map(
                     new Function<WSResponse, String>() {
@@ -179,11 +178,12 @@ public class Application extends Controller {
             }
             
             return ok(page).as("text/html");
-//        } else if (request().accepts("text/turtle")) {
             
-//        }
+        } else if (request().accepts("text/turtle")) {
+            return ok(new LocalTimeWidget(path).getRdfData().get(5000)).as("text/turtle");
+        }
         
-//        return badRequest();
+        return badRequest();
     }
 
 }
