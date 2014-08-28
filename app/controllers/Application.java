@@ -124,7 +124,8 @@ public class Application extends Controller {
         "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/bootstrap.min.css\"></link>" +
         "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/results.css\"></link>" +
         "<script src=\"/assets/javascripts/jquery-2.1.1.min.js\"></script>" +
-        "<script src=\"/assets/javascripts/main.js\"></script></head>" +
+        "<script src=\"/assets/javascripts/main.js\"></script>" +
+        "<script src=\"/assets/javascripts/clockWidget.js\"></script></head>" +
         "<body></body></html>");
         
         // we add the nodes from existing Wikipedia page
