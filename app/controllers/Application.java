@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.LocalTimeWidget;
+import models.LocalWeatherWidget;
 import models.Widget;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -62,6 +63,7 @@ public class Application extends Controller {
     	for (String t: types) {
     	    if (t.compareTo("http://dbpedia.org/ontology/PopulatedPlace") == 0) {
     	        list.add(new LocalTimeWidget(path));
+    	        list.add(new LocalWeatherWidget(path));
     	    }
     	}
     	
