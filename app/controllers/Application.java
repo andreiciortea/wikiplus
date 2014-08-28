@@ -7,6 +7,7 @@ import models.LocalTimeWidget;
 import models.Widget;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.StringWriter;
 
 import javax.xml.transform.Transformer;
@@ -58,10 +59,10 @@ public class Application extends Controller {
             );
     }
 
-    public static List<Widget> getApplicableWidgets(List<String> types) {
+    public static List<Widget> getApplicableWidgets(String path, List<String> types) {
         // TODO: add the actual implementation
     	List<Widget> list = new ArrayList<Widget>();
-    	list.add(new LocalTimeWidget("Lyon"));
+    	list.add(new LocalTimeWidget(path));
     	
         return list;
     }
@@ -78,22 +79,28 @@ public class Application extends Controller {
     }
     
     public static Promise<String> getWidgetsData(String path) {
-        Promise<List<Widget>> widgets = extractTypes(path).map(
-                                                new Function<List<String>, List<Widget>>() {
-                                                    public List<Widget> apply(List<String> types) {
-                                                        return getApplicableWidgets(types);
-                                                    }
-                                                }
-                                            );
+//        Promise<List<Widget>> widgets = extractTypes(path).map(
+//                                                new Function<List<String>, List<Widget>>() {
+//                                                    public List<Widget> apply(List<String> types) {
+//                                                        return getApplicableWidgets(types);
+//                                                    }
+//                                                }
+//                                            );
+
+        List<String> types = extractTypes(path).get(5000);
+        List<Widget> widgets = getApplicableWidgets(path, types);
         
-        Promise<String> jsonData = widgets.flatMap(
+        Promise<String> jsonData = getJsonData(widgets);
+        
+        /*Promise<String> jsonData = widgets.flatMap(
                 new Function<List<Widget>, Promise<String>>() {
                     public Promise<String> apply(List<Widget> widgets) {
                         return getJsonData(widgets);
                     }
                 }
-            );
+            );*/
         
+//        return (new WidgetDataWrapper(path, jsonData));
         return jsonData;
     }
     
