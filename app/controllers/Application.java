@@ -37,7 +37,8 @@ public class Application extends Controller {
                         // we create a new XML Document for the new HTML page
                         Document new_page_xml = XML.fromString("<!DOCTYPE html>" +
                         "<html lang=\"en\" dir=\"ltr\" class=\"client-nojs\">" +
-                        "<head><meta charset=\"UTF-8\" /></head>" +
+                        "<head><meta charset=\"UTF-8\" />" + 
+                        "<script src=\"/assets/javascripts/main.js\"></script></head>" +
                         "<body></body></html>");
                         
                         // we add the nodes from existing Wikipedia page
