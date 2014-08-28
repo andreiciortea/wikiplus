@@ -129,6 +129,7 @@ public class Application extends Controller {
         "<script src=\"/assets/javascripts/moment.min.js\"></script>" +
         "<script src=\"/assets/javascripts/moment-timezone.js\"></script>" +
         "<script src=\"/assets/javascripts/main.js\"></script>" +
+        "<script src=\"/assets/javascripts/weatherWidget.js\"></script>" +
         "<script src=\"/assets/javascripts/clockWidget.js\"></script></head>" +
         "<body></body></html>");
         
