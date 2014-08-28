@@ -27,10 +27,13 @@ body {
 
 }
 .search {
-    width: 100%;
-    position: absolute;
-    bottom: 5%;
-    
+	width: 50%;
+	position: absolute;
+	bottom: 5%;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
 }
 .search input {
     width: 80%;
