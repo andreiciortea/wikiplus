@@ -104,7 +104,7 @@ public class LocalTimeWidget extends Widget {
 	                    .put("timezone", timezoneId)
             );
 	    
-	    return widgetData.toString();
+	    return Json.stringify(widgetData);
 	}
 	
 	public String packRdfData(String timezoneDst) {
@@ -115,7 +115,7 @@ public class LocalTimeWidget extends Widget {
 	}
 	
 	@Override
-	public Promise<String> getJsonData() {
+	public String getJsonData() {
 		// this is called from the controller for HTML representations
 	    // TODO: refactor this
 	    Promise<String> coordinatesPromise = getDBpediaCoordinates();
@@ -127,11 +127,11 @@ public class LocalTimeWidget extends Widget {
                         return packJsonData(timezoneId);
                     }
 	            }
-            );
+            ).get(5000);
 	}
 	
 	@Override
-	public Promise<String> getRdfData() {
+	public String getRdfData() {
 		// this is called from the controller for RDF representations
 	    // TODO: refactor this
 	    Promise<String> coordinatesPromise = getDBpediaCoordinates();
@@ -143,7 +143,7 @@ public class LocalTimeWidget extends Widget {
                         return packRdfData(timezoneDst);
                     }
 	            }
-            );
+            ).get(5000);
 	}
 
 }

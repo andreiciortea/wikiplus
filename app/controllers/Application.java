@@ -34,88 +34,92 @@ import views.html.*;
 
 public class Application extends Controller {
 
-    private static List<String> extractTypesJson(String jsonStr) {
-        JsonNode results = Json.parse(jsonStr);
-        
-        return results.findPath("results").findPath("bindings").findValuesAsText("value");
-    }
-    
     public static Promise<List<String>> extractTypes(String path) {
         String resourceUri = "<http://dbpedia.org/resource/" + path + ">";
-        String query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT ?type WHERE { " + resourceUri + " rdf:type ?type . }";
+        String query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT ?type WHERE { " 
+                        + resourceUri + " rdf:type ?type . }";
         
         WSRequestHolder holder = WS.url("http://dbpedia.org/sparql")
                 .setQueryParameter("format", "json")
                 .setQueryParameter("query", query);
         
-        Promise<WSResponse> dbpediaResponse = holder.get();
+        Promise<WSResponse> dbpediaTypesPromise = holder.get();
         
-        return dbpediaResponse.map(
+        return dbpediaTypesPromise.map(
                 new Function<WSResponse, List<String>>() {
                     public List<String> apply(WSResponse response) {
-                        return extractTypesJson(response.getBody());
+                        return Json.parse(response.getBody()).findPath("results")
+                                                                .findPath("bindings")
+                                                                .findValuesAsText("value");
                     }
                 }
             );
     }
 
-    public static List<Widget> getApplicableWidgets(String path, List<String> types) {
-        // TODO: add the actual implementation
+    public static List<Widget> getFilteredWidgetList(String path, List<String> types) {
     	List<Widget> list = new ArrayList<Widget>();
-    	list.add(new LocalTimeWidget(path));
+
+    	for (String t: types) {
+    	    if (t.compareTo("http://dbpedia.org/ontology/PopulatedPlace") == 0) {
+    	        list.add(new LocalTimeWidget(path));
+    	    }
+    	}
     	
         return list;
     }
     
-    public static Promise<String> getJsonData(List<Widget> widgets) {
-        // TODO: add the actual implementation
-        return widgets.get(0).getJsonData().map(
-                        new Function<String, String>() {
-                            public String apply(String jsonObj) {
-                                return "[" + jsonObj + "]";
-                            }
-                        }
-                    );
-    }
-    
-    public static Promise<String> getWidgetsData(String path) {
-//        Promise<List<Widget>> widgets = extractTypes(path).map(
-//                                                new Function<List<String>, List<Widget>>() {
-//                                                    public List<Widget> apply(List<String> types) {
-//                                                        return getApplicableWidgets(types);
-//                                                    }
-//                                                }
-//                                            );
+    public static List<Widget> getWidgetsForResource(String path) {
+        /*Promise<List<Widget>> widgets = extractTypes(path).map(
+                                                new Function<List<String>, List<Widget>>() {
+                                                    public List<Widget> apply(List<String> types) {
+                                                        return getApplicableWidgets(types);
+                                                    }
+                                                }
+                                            );
 
+        Promise<String> jsonData = widgets.flatMap(
+            new Function<List<Widget>, Promise<String>>() {
+                public Promise<String> apply(List<Widget> widgets) {
+                    return getJsonData(widgets);
+                }
+            }
+        );*/
+        
         List<String> types = extractTypes(path).get(5000);
-        List<Widget> widgets = getApplicableWidgets(path, types);
         
-        Promise<String> jsonData = getJsonData(widgets);
-        
-        /*Promise<String> jsonData = widgets.flatMap(
-                new Function<List<Widget>, Promise<String>>() {
-                    public Promise<String> apply(List<Widget> widgets) {
-                        return getJsonData(widgets);
-                    }
-                }
-            );*/
-        
-//        return (new WidgetDataWrapper(path, jsonData));
-        return jsonData;
+        return getFilteredWidgetList(path, types);
     }
     
-    public static Promise<String> wrapScript(Promise<String> jsonData) {
-        return jsonData.map(
-                new Function<String, String>() {
-                    public String apply(String jsonData) {
-                        return "<script id=\"widgets\" type=\"application/json\">"
-                                + "var jsonData = " + jsonData + ";"
-                                + "</script>";
-                    }
-                }
-            );
+    public static String getWidgetDataAsJson(List<Widget> widgets) {
+        
+        if (widgets.size() == 0) return "[]";
+        
+        String jsonDataStr = "[";
+        
+        for (Widget w : widgets) {
+            jsonDataStr += w.getJsonData() + ",";
+        }
+
+        return jsonDataStr = jsonDataStr.substring(0, jsonDataStr.length() - 1) + "]";
     }
     
+    public static String getWidgetDataAsTurtle(List<Widget> widgets) {
+        String turtleStr = "";
+        
+        for (Widget w : widgets) {
+            turtleStr += w.getRdfData() + "\n";
+        }
+        
+        return turtleStr;
+    }
+    
+    public static String wrapWidgetDataInJSScript(String jsonData) {
+        return "<script id=\"widgets\" type=\"application/json\">"
+                + "var jsonData = " + jsonData + ";"
+                + "</script>";
+    }
+    
+    // TODO: refactor using Play
     public static String cleanifyWikiPage(String pageBody) {
         // we create an XML Document from the existing Wikipedia page
         Document old_page_xml = XML.fromString(pageBody);
@@ -153,11 +157,15 @@ public class Application extends Controller {
           return null;
         }
     }
-    
+
+    // TODO: async
     public static Result index(String path) {
 
         if (request().accepts("text/html")) {
-            Promise<String> jsonData = getWidgetsData(path);
+            // Get widget data as a serialized JSON array.
+            String widgetJsonArray = getWidgetDataAsJson(getWidgetsForResource(path));
+            // Wrap it up for injection in the HTML representation.
+            String widgetDataScript = wrapWidgetDataInJSScript(widgetJsonArray);
             
             Promise<String> wikiPage = WS.url("http://en.wikipedia.org/wiki/" + path).get().map(
                     new Function<WSResponse, String>() {
@@ -168,19 +176,18 @@ public class Application extends Controller {
                     }
                 );
             
-            Promise<String> script = wrapScript(jsonData);
-            String jsScript = script.get(5000);
+            // TODO: catch timeout exception
+            String wikiPlusPage = wikiPage.get(5000).replace("</body>", widgetDataScript + "</body>");
             
-            String page = wikiPage.get(5000).replace("</body>", jsScript + "</body>");
-            
-            if (page == null) {
+            if (wikiPlusPage == null) {
                 return internalServerError();
             }
             
-            return ok(page).as("text/html");
+            // Add the right MIME type.
+            return ok(wikiPlusPage).as("text/html");
             
         } else if (request().accepts("text/turtle")) {
-            return ok(new LocalTimeWidget(path).getRdfData().get(5000)).as("text/turtle");
+            return ok(getWidgetDataAsTurtle(getWidgetsForResource(path))).as("text/turtle");
         }
         
         return badRequest();
