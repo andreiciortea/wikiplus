@@ -3,6 +3,9 @@
 # ~~~~
 
 # Home page
+GET		/							controllers.LandingPage.landing()
+
+# Wiki Page
 GET     /*path                      controllers.Application.index(path)
 
 # Map static resources from the /public folder to the /assets URL path
