@@ -123,6 +123,8 @@ public class Application extends Controller {
         "<head><meta charset=\"UTF-8\" />" +
         "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/bootstrap.min.css\"></link>" +
         "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/results.css\"></link>" +
+        "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/wikimedia.css\"></link>" +
+        "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/wikimediaBits.css\"></link>" +
         "<script src=\"/assets/javascripts/jquery-2.1.1.min.js\"></script>" +
         "<script src=\"/assets/javascripts/moment.min.js\"></script>" +
         "<script src=\"/assets/javascripts/moment-timezone.js\"></script>" +
