@@ -14,7 +14,17 @@
         
         <script type="text/javascript" >
 			$( document ).ready(function() {
-				alert( "ready!" );
+				$( "#searchBtn" ).on( "click", function() {
+					var input = $('#searchBox').val();
+					
+					if(input.length>0){
+						var protocol = location.protocol;
+						var host = window.location.host;
+						location.href = protocol + '//' + host + '/wiki/' + input;
+					} else
+						alert('Please enter a city name!');
+				});
+				
 			});
 		</script>  
     </head>
@@ -30,7 +40,7 @@
  			</div>
  			
  			<div class="search">
- 				<input type="text" name="searchBox">
+ 				<input type="text" name="searchBox" id="searchBox">
  				<button type="button" class="btn btn-primary" id="searchBtn">Search</button>
  			</div>
  		
