@@ -102,7 +102,7 @@ public class Application extends Controller {
                 new Function<String, String>() {
                     public String apply(String jsonData) {
                         return "<script id=\"widgets\" type=\"application/json\">"
-                                + jsonData
+                                + "var jsonData = " + jsonData + ";"
                                 + "</script>";
                     }
                 }
