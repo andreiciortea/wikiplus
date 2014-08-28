@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(window).bind("load", function() {
 				
 	var $hands = $('#liveclock div.hand')
 
@@ -12,7 +12,8 @@ $(document).ready(function(){
 	function updateclock(){
 		var timeZone;
 		// Getting the timezone from the server gathered data
-		for(var elmt in jsonData){
+		for(var i=0; i<jsonData.length; i++){
+			var elmt = jsonData[i];
 			if(elmt.name == 'LocalTime'){
 				timeZone = elmt.data.timezone;
 			}

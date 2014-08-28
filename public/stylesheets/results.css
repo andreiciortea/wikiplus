@@ -21,7 +21,6 @@ body {
     height: 80%;
 }
 
-// Clock Widget Style
 .outer_face {
     position: relative;
     width: 250px;
@@ -159,5 +158,3 @@ body {
     top: 0;
     background: red
     }
-
-    // --------------------------------------

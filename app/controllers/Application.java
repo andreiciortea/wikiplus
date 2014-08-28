@@ -101,7 +101,7 @@ public class Application extends Controller {
         return jsonData.map(
                 new Function<String, String>() {
                     public String apply(String jsonData) {
-                        return "<script id=\"widgets\" type=\"application/json\">"
+                        return "<script type=\"text/javascript\">"
                                 + "var jsonData = " + jsonData + ";"
                                 + "</script>";
                     }
@@ -124,6 +124,8 @@ public class Application extends Controller {
         "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/bootstrap.min.css\"></link>" +
         "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/results.css\"></link>" +
         "<script src=\"/assets/javascripts/jquery-2.1.1.min.js\"></script>" +
+        "<script src=\"/assets/javascripts/moment.min.js\"></script>" +
+        "<script src=\"/assets/javascripts/moment-timezone.js\"></script>" +
         "<script src=\"/assets/javascripts/main.js\"></script>" +
         "<script src=\"/assets/javascripts/clockWidget.js\"></script></head>" +
         "<body></body></html>");
