@@ -8,6 +8,6 @@ public abstract class Widget {
 	
 	public abstract Promise<String> getJsonData();
 	
-	public abstract Promise<String> getRDFData();
+	public abstract Promise<String> getRdfData();
 
 }
