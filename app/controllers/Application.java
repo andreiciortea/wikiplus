@@ -72,24 +72,7 @@ public class Application extends Controller {
     }
     
     public static List<Widget> getWidgetsForResource(String path) {
-        /*Promise<List<Widget>> widgets = extractTypes(path).map(
-                                                new Function<List<String>, List<Widget>>() {
-                                                    public List<Widget> apply(List<String> types) {
-                                                        return getApplicableWidgets(types);
-                                                    }
-                                                }
-                                            );
-
-        Promise<String> jsonData = widgets.flatMap(
-            new Function<List<Widget>, Promise<String>>() {
-                public Promise<String> apply(List<Widget> widgets) {
-                    return getJsonData(widgets);
-                }
-            }
-        );*/
-        
         List<String> types = extractTypes(path).get(5000);
-        
         return getFilteredWidgetList(path, types);
     }
     
