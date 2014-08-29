@@ -108,39 +108,41 @@ public class Application extends Controller {
     // TODO: refactor using Play
     public static String cleanifyWikiPage(String pageBody) {
         // we create an XML Document from the existing Wikipedia page
-        Document old_page_xml = XML.fromString(pageBody);
+        Document oldPageXml = XML.fromString(pageBody);
         
         // we identify the two notes we want to keep (<title> and <div id="content">)
-        Node title_xml = XPath.selectNode("/html/head/title", old_page_xml).cloneNode(true);
-        Node content_xml = XPath.selectNode("/html/body/div[@id='content']", old_page_xml).cloneNode(true);
+        Node titleXml = XPath.selectNode("/html/head/title", oldPageXml).cloneNode(true);
+        Node contentXml = XPath.selectNode("/html/body/div[@id='content']", oldPageXml).cloneNode(true);
         
         // we create a new XML Document for the new HTML page
-        Document new_page_xml = XML.fromString("<!DOCTYPE html>" +
-        "<html lang=\"en\" dir=\"ltr\" class=\"client-nojs\">" +
-        "<head><meta charset=\"UTF-8\" />" +
-        "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/bootstrap.min.css\"></link>" +
-        "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/results.css\"></link>" +
-        "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/wikimedia.css\"></link>" +
-        "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/wikimediaBits.css\"></link>" +
-        "<script src=\"/assets/javascripts/jquery-2.1.1.min.js\"></script>" +
-        "<script src=\"/assets/javascripts/moment.min.js\"></script>" +
-        "<script src=\"/assets/javascripts/moment-timezone.js\"></script>" +
-        "<script src=\"/assets/javascripts/main.js\"></script>" +
-        "<script src=\"/assets/javascripts/weatherWidget.js\"></script>" +
-        "<script src=\"/assets/javascripts/clockWidget.js\"></script></head>" +
-        "<body></body></html>");
+        Document newPageXml = XML.fromString("<!DOCTYPE html>" +
+            "<html lang=\"en\" dir=\"ltr\" class=\"client-nojs\">" +
+            "<head><meta charset=\"UTF-8\" />" +
+            "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/bootstrap.min.css\"></link>" +
+            "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/results.css\"></link>" +
+            "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/wikimedia.css\"></link>" +
+            "<link rel=\"stylesheet\" media=\"screen\" href=\"/assets/stylesheets/wikimediaBits.css\"></link>" +
+            "<script src=\"/assets/javascripts/jquery-2.1.1.min.js\"></script>" +
+            "<script src=\"/assets/javascripts/moment.min.js\"></script>" +
+            "<script src=\"/assets/javascripts/moment-timezone.js\"></script>" +
+            "<script src=\"/assets/javascripts/main.js\"></script>" +
+            "<script src=\"/assets/javascripts/weatherWidget.js\"></script>" +
+            "<script src=\"/assets/javascripts/clockWidget.js\"></script></head>" +
+            "<body></body></html>");
         
         // we add the nodes from existing Wikipedia page
-        new_page_xml.adoptNode(title_xml);
-        XPath.selectNode("/html/head", new_page_xml).appendChild(title_xml);
-        new_page_xml.adoptNode(content_xml);
-        XPath.selectNode("/html/body", new_page_xml).appendChild(content_xml);
+        newPageXml.adoptNode(titleXml);
+        XPath.selectNode("/html/head", newPageXml).appendChild(titleXml);
+        newPageXml.adoptNode(contentXml);
+        XPath.selectNode("/html/body", newPageXml).appendChild(contentXml);
+        
+        
         
         // some magic trick to change XML into text
         try {
               Transformer transformer = TransformerFactory.newInstance().newTransformer();
               StreamResult result = new StreamResult(new StringWriter());
-              DOMSource source = new DOMSource(new_page_xml);
+              DOMSource source = new DOMSource(newPageXml);
               transformer.transform(source, result);
               // here we return the text
               return result.getWriter().toString();
