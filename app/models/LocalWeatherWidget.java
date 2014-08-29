@@ -5,8 +5,6 @@ import java.text.DecimalFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import play.api.libs.concurrent.Akka;
-import play.libs.F.Function0;
 import play.libs.Json;
 import play.libs.F.Function;
 import play.libs.F.Promise;
