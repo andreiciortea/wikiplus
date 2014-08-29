@@ -20,7 +20,9 @@
 					if(input.length>0){
 						var protocol = location.protocol;
 						var host = window.location.host;
-						location.href = protocol + '//' + host + '/' + input.toLowerCase();
+						// Replace space with underscore for better wikipedia URLs compatibility
+						input = input.replace(" ", "_");
+						location.href = protocol + '//' + host + '/' + input;
 					} else
 						alert('Please enter a city name!');
 				});
