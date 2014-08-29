@@ -113,7 +113,7 @@ public class Application extends Controller {
     }
     
     public static String wrapWidgetDataInJSScript(String jsonData) {
-        return "<script id=\"widgets\" type=\"application/json\">"
+        return "<script id=\"widgets\">"
                 + "var jsonData = " + jsonData + ";"
                 + "</script>";
     }
