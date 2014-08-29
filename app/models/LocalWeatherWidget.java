@@ -1,5 +1,7 @@
 package models;
 
+import java.text.DecimalFormat;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -84,7 +86,7 @@ public class LocalWeatherWidget extends Widget {
 	            	.put("city", this.path)
 					.put("icon", "http://openweathermap.org/img/w/" + icon_id + ".png")
 					.put("description", jsonData.findValue("description").asText())
-					.put("temp", celsius)
+					.put("temp", new DecimalFormat("#.00").format(celsius))
 					);
 	    
 		return jsonOutput.toString();
@@ -98,13 +100,13 @@ public class LocalWeatherWidget extends Widget {
 		String icon_id = jsonData.findValue("icon").asText();
 		double celsius = Double.parseDouble(jsonData.findValue("temp").asText()) - 273.15;
 		
-		String rdfOutput = "PREFIX ex: <http://exemple.com> .\n";
-		rdfOutput += "<http://dbpedia.org/resource/" + path + "> ex:hasIcon "
+		String rdfOutput = "";
+		rdfOutput += "<http://dbpedia.org/resource/" + path + "> <http://exemple.com#hasIcon> "
 				+ "<http://openweathermap.org/img/w/" + icon_id + ".png> .\n"
-				+ "<http://dbpedia.org/resource/" + path + "> ex:hasDescription \""
+				+ "<http://dbpedia.org/resource/" + path + "> <http://exemple.com#hasDescription> \""
 				+ jsonData.findValue("description").asText() + "\" .\n"
-				+ "<http://dbpedia.org/resource/" + path + "> ex:hasTemp \""
-				+ celsius + "\" .";
+				+ "<http://dbpedia.org/resource/" + path + "> <http://exemple.com#hasTemp> \""
+				+ new DecimalFormat("#.00").format(celsius) + "\" .";
 		
 		return rdfOutput;
 	}
