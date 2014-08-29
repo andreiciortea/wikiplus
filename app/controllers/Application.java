@@ -171,7 +171,7 @@ public class Application extends Controller {
                 );
             
             // TODO: catch timeout exception
-            String wikiPlusPage = wikiPage.get(5000).replace("</body>", widgetDataScript + "</body>");
+            String wikiPlusPage = wikiPage.get(20000).replace("</body>", widgetDataScript + "</body>");
             
             if (wikiPlusPage == null) {
                 return internalServerError();
