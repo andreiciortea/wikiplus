@@ -72,7 +72,7 @@ public class Application extends Controller {
     }
     
     public static List<Widget> getWidgetsForResource(String path) {
-        List<String> types = extractTypes(path).get(5000);
+        List<String> types = extractTypes(path).get(20000);
         return getFilteredWidgetList(path, types);
     }
     

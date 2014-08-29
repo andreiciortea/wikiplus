@@ -46,7 +46,7 @@ public class LocalTimeWidget extends Widget {
 	
 	private Promise<JsonNode> getGeoNamesTimeZone(Promise<String> jsonData) {
 		// use the json response of dbpedia to query geonames for timezone
-	    JsonNode result = Json.parse(jsonData.get(5000));
+	    JsonNode result = Json.parse(jsonData.get(20000));
 	    
 	    String latitude = result.findPath("lat").get("value").asText();
 	    String longitude = result.findPath("long").get("value").asText();
@@ -127,7 +127,7 @@ public class LocalTimeWidget extends Widget {
                         return packJsonData(timezoneId);
                     }
 	            }
-            ).get(5000);
+            ).get(20000);
 	}
 	
 	@Override
@@ -143,7 +143,7 @@ public class LocalTimeWidget extends Widget {
                         return packRdfData(timezoneDst);
                     }
 	            }
-            ).get(5000);
+            ).get(20000);
 	}
 
 }

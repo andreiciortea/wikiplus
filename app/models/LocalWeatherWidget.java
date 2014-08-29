@@ -46,7 +46,7 @@ public class LocalWeatherWidget extends Widget {
 	public Promise<JsonNode> getWeather(){
 		// use the json response of dbpedia to query openweathermap
 		Promise<String> jsonData = getCoordinates();
-		JsonNode result = Json.parse(jsonData.get(5000));
+		JsonNode result = Json.parse(jsonData.get(20000));
 	    
 	    String latitude = result.findPath("lat").get("value").asText();
 	    String longitude = result.findPath("long").get("value").asText();
@@ -72,7 +72,7 @@ public class LocalWeatherWidget extends Widget {
 	@Override
 	public String getJsonData() {
 		// this is called from the controller for HTML browsers
-		JsonNode jsonData = getWeather().get(5000);
+		JsonNode jsonData = getWeather().get(20000);
 
 		String icon_id = jsonData.findValue("icon").asText();
 		double celsius = Double.parseDouble(jsonData.findValue("temp").asText()) - 273.15;
@@ -93,7 +93,7 @@ public class LocalWeatherWidget extends Widget {
 	@Override
 	public String getRdfData() {
 		// this is called from the controller for RDF browsers
-		JsonNode jsonData = getWeather().get(5000);
+		JsonNode jsonData = getWeather().get(20000);
 
 		String icon_id = jsonData.findValue("icon").asText();
 		double celsius = Double.parseDouble(jsonData.findValue("temp").asText()) - 273.15;
