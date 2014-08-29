@@ -49,9 +49,13 @@ public class Application extends Controller {
         return dbpediaTypesPromise.map(
                 new Function<WSResponse, List<String>>() {
                     public List<String> apply(WSResponse response) {
-                        return Json.parse(response.getBody()).findPath("results")
-                                                                .findPath("bindings")
-                                                                .findValuesAsText("value");
+                        try {
+                            return Json.parse(response.getBody()).findPath("results")
+                                            .findPath("bindings")
+                                            .findValuesAsText("value");
+                        } catch (Exception e) {
+                            return new ArrayList<String>();
+                        }
                     }
                 }
             );
