@@ -9,7 +9,7 @@ The proof of concept implementation supports several features, such as:
 * content negatiation (text/html and text/turtle).
 
 
-Example queries
+Sample queries
 ---------------
 Retrieve an HTML representation for Lyon:
 curl -i -H "Accept: text/html" -X GET http://localhost:9000/Lyon
@@ -20,4 +20,4 @@ curl -i -H "Accept: text/turtle" -X GET http://localhost:9000/Lyon
 
 Extensibility
 -------------
-New widgets may be added by extending the Widget class and mapping them to DBpedia concepts in Application.getFilteredWidgetList(...).
+New widgets may be added on the back end by extending the Widget class and mapping them to DBpedia concepts in Application.getFilteredWidgetList(...).
